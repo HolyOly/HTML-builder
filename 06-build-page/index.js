@@ -12,6 +12,7 @@ const pathToSourceCSS = path.join(__dirname, 'styles');
 const pathToArticles = path.join(__dirname, 'components', 'articles.html');
 const pathToFooter = path.join(__dirname, 'components', 'footer.html');
 const pathToHeader = path.join(__dirname, 'components', 'header.html');
+const pathToAbout = path.join(__dirname, 'components', 'about.html');
 
 function createHtmlFile() {
     fs.writeFile(pathToHTML, '', function (err) {
@@ -62,6 +63,11 @@ async function read() {
     let dataFooter = await fsp.readFile(pathToFooter, 'utf-8').catch((err) => console.error('Failed to read file', err));
 
     let dataPage = await fsp.readFile(pathToTemplate, 'utf-8').catch((err) => console.error('Failed to read file', err));
+
+    if (dataPage.includes('{{about}}')) {
+        let dataAbout = await fsp.readFile(pathToAbout, 'utf-8').catch((err) => console.error('Failed to read file', err));
+        dataPage = dataPage.replace(/{{about}}/g, dataAbout.toString());
+    }
 
     dataPage = dataPage.replace(/{{header}}/g, dataHeader.toString());
     dataPage = dataPage.replace(/{{articles}}/g, dataArticles.toString());
